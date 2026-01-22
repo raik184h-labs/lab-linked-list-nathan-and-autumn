@@ -85,19 +85,27 @@ public class MyLinkedList<E> implements List<E> {
 
     @Override
     public void add(int index, E element) {
-        if (index < 0 || index > this.size) {
+        // Validate index: must be between 0 and size (inclusive)
+        if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException();
         }
+        
+        // Special case: adding at the beginning (index 0)
         if (index == 0) {
+            // Create new node that points to current head
             Node newNode = new Node(element, this.head);
+            // Update head to point to the new node
             this.head = newNode;
         } else {
+            // Find the node BEFORE where we want to insert
             Node node = this.head;
             for (int i = 0; i < index - 1; i++) {
                 node = node.next;
             }
+            // Create new node that points to what comes after
             Node newNode = new Node(element, node.next);
-            node.next = newNode;    
+            // Link the previous node to the new node
+            node.next = newNode;
         }
         this.size++;
     }
@@ -226,58 +234,30 @@ public class MyLinkedList<E> implements List<E> {
 
     @Override
     public boolean remove(Object obj) {
-        // Handle empty list
-        if (this.head == null) {
-            return false;
-        }
-        
-        // Special case: removing the head
-        if (equals(obj, this.head.cargo)) {
-            this.head = this.head.next;
-            this.size--;
-            return true;
-        }
-        
-        // Find the node BEFORE the one to remove
         Node node = this.head;
-        while (node.next != null) {
-            // Check if the next node matches
-            if (equals(obj, node.next.cargo)) {
-                // Skip over the matching node
-                node.next = node.next.next;
-                this.size--;
+
+        for (int i = 0; i < this.size; i++) {
+
+            node = node.next;
+            if (node == null) {
+                continue;
+            }
+            if (node.cargo == obj) {
                 return true;
             }
-            node = node.next;
         }
-        
-        // Element not found
         return false;
     }
 
     @Override
     public E remove(int index) {
-        // Validate index
-        if (index < 0 || index >= this.size) {
-            throw new IndexOutOfBoundsException();
+        Node node = this.head;
+        for (int i = 0; i < index - 1; i++) {
+            node = node.next;
         }
-        
-        E cargo;
-        
-        // Special case: removing the head (index 0)
-        if (index == 0) {
-            cargo = this.head.cargo;
-            this.head = this.head.next;
-        } else {
-            Node node = this.head;
-            for (int i = 0; i < index - 1; i++) {
-                node = node.next;
-            }
-            cargo = node.next.cargo;
-            node.next = node.next.next;
-        }
-        
-        this.size--;
+        E cargo = node.next.cargo;
+        node = node.next.next;
+
         return cargo;
     }
 

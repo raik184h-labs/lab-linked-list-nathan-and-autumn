@@ -269,11 +269,14 @@ public class MyLinkedList<E> implements List<E> {
             cargo = this.head.cargo;
             this.head = this.head.next;
         } else {
+            // Find the node BEFORE the one to remove
             Node node = this.head;
             for (int i = 0; i < index - 1; i++) {
                 node = node.next;
             }
+            // Get the cargo from the node to remove
             cargo = node.next.cargo;
+            // Skip over the node to remove
             node.next = node.next.next;
         }
         

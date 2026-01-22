@@ -257,27 +257,12 @@ public class MyLinkedList<E> implements List<E> {
 
     @Override
     public E remove(int index) {
-        // Validate index
-        if (index < 0 || index >= this.size) {
-            throw new IndexOutOfBoundsException();
+        Node node = this.head;
+        for (int i = 0; i < index - 1; i++) {
+            node = node.next;
         }
-        
-        E cargo;
-        
-        // Special case: removing the head (index 0)
-        if (index == 0) {
-            cargo = this.head.cargo;
-            this.head = this.head.next;
-        } else {
-            Node node = this.head;
-            for (int i = 0; i < index - 1; i++) {
-                node = node.next;
-            }
-            cargo = node.next.cargo;
-            node.next = node.next.next;
-        }
-        
-        this.size--;
+        E cargo = node.cargo;
+        node.next = node.next.next;
         return cargo;
     }
 

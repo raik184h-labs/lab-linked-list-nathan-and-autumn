@@ -226,58 +226,29 @@ public class MyLinkedList<E> implements List<E> {
 
     @Override
     public boolean remove(Object obj) {
-        // Handle empty list
-        if (this.head == null) {
-            return false;
-        }
-        
-        // Special case: removing the head
-        if (equals(obj, this.head.cargo)) {
-            this.head = this.head.next;
-            this.size--;
-            return true;
-        }
-        
-        // Find the node BEFORE the one to remove
         Node node = this.head;
-        while (node.next != null) {
-            // Check if the next node matches
-            if (equals(obj, node.next.cargo)) {
-                // Skip over the matching node
-                node.next = node.next.next;
-                this.size--;
+
+        for (int i = 0; i < this.size - 1; i++) {
+
+            node = node.next;
+            if (node == null) {
+                return false;
+            }
+            if (node.cargo == obj) {
                 return true;
             }
-            node = node.next;
         }
-        
-        // Element not found
         return false;
     }
 
     @Override
     public E remove(int index) {
-        // Validate index
-        if (index < 0 || index >= this.size) {
-            throw new IndexOutOfBoundsException();
+        Node node = this.head;
+        for (int i = 0; i < index - 1; i++) {
+            node = node.next;
         }
-        
-        E cargo;
-        
-        // Special case: removing the head (index 0)
-        if (index == 0) {
-            cargo = this.head.cargo;
-            this.head = this.head.next;
-        } else {
-            Node node = this.head;
-            for (int i = 0; i < index - 1; i++) {
-                node = node.next;
-            }
-            cargo = node.next.cargo;
-            node.next = node.next.next;
-        }
-        
-        this.size--;
+        E cargo = node.cargo;
+        node.next = node.next.next;
         return cargo;
     }
 
